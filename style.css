@@ -1,5 +1,5 @@
 /* =====================================================
-   Theme
+   Theme（Earth tone）
 ===================================================== */
 :root {
   --bg-main: #faf7f2;
@@ -16,40 +16,30 @@
 }
 
 /* =====================================================
-   Base（⭐ 高度關鍵）
+   Base
 ===================================================== */
+* {
+  box-sizing: border-box;
+}
+
 html, body {
   height: 100%;
 }
 
 body {
   margin: 0;
-  display: flex;
-  flex-direction: column;
   background: linear-gradient(180deg, #fff 0%, var(--bg-main) 100%);
   font-family: system-ui, -apple-system, "Noto Sans TC", sans-serif;
   color: var(--text-main);
 }
 
-* {
-  box-sizing: border-box;
-}
-
 /* =====================================================
-   Layout（⭐ 滿版關鍵）
+   Layout（回到最初穩定結構）
 ===================================================== */
-.section {
-  width: 100%;
-  min-height: 100vh;        /* ⭐ 解決底部空白 */
-  display: flex;
-  flex-direction: column;
-}
-
 .wrap {
-  max-width: 1200px;
+  max-width: 720px;        /* ✅ 一開始最穩定的寬度 */
   margin: 0 auto;
   padding: 16px;
-  flex: 1;                 /* ⭐ 撐開高度 */
 }
 
 /* =====================================================
@@ -59,7 +49,9 @@ h1, h2, h3 {
   color: var(--earth-4);
 }
 
-p { color: var(--text-main); }
+p {
+  color: var(--text-main);
+}
 
 .muted, .hint, .small {
   color: var(--text-muted);
@@ -77,12 +69,66 @@ p { color: var(--text-main); }
 }
 
 /* =====================================================
-   Grid
+   ✅ Phase height（真正生效的關鍵）
+===================================================== */
+#phaseScratch,
+#phaseVote,
+#phaseReveal {
+  min-height: 100vh;        /* ✅ 每一關至少一整個畫面 */
+  display: flex;
+  flex-direction: column;
+}
+
+#phaseScratch > *,
+#phaseVote > *,
+#phaseReveal > * {
+  flex-shrink: 0;
+}
+
+/* =====================================================
+   Scratch cards（最原始穩定版）
 ===================================================== */
 .grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 14px;
+  display: block;          /* ✅ 一張一張排，最穩 */
+}
+
+.scratchCard {
+  position: relative;
+  background: linear-gradient(160deg, var(--earth-1), #fff);
+  border-radius: 16px;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.scratchBg {
+  padding: 16px;
+}
+
+.scratchBg .title {
+  font-size: 16px;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.scratchBg .desc {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.scratchBg .tag {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  font-size: 12px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(122,139,90,.15);
+  color: var(--accent);
+}
+
+.scratchOverlay {
+  position: absolute;
+  inset: 0;
 }
 
 /* =====================================================
@@ -93,22 +139,56 @@ p { color: var(--text-main); }
   border-radius: 999px;
   border: none;
   background: var(--earth-2);
+  color: var(--earth-4);
+  font-size: 14px;
 }
 
 .voteRow {
   display: flex;
   gap: 12px;
+  margin-top: 16px;
 }
 
 .voteBtn {
   flex: 1;
-  padding: 12px;
+  padding: 14px;
   border-radius: 999px;
   border: none;
+  font-size: 16px;
 }
 
-.voteBtn.boy { background: #dfeaf3; }
-.voteBtn.girl { background: var(--earth-1); }
+.voteBtn.boy {
+  background: #dfeaf3;
+}
+
+.voteBtn.girl {
+  background: var(--earth-1);
+}
+
+/* =====================================================
+   Bars
+===================================================== */
+.bar {
+  height: 10px;
+  border-radius: 999px;
+  background: var(--earth-1);
+  overflow: hidden;
+  display: flex;
+}
+
+.barFill.boy {
+  background: #a8c8e6;
+}
+
+.barFill.girl {
+  background: var(--earth-3);
+}
+
+.barLabels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+}
 
 /* =====================================================
    Reveal
@@ -120,9 +200,54 @@ p { color: var(--text-main); }
 .babyImg {
   max-width: 220px;
   border-radius: 18px;
+  margin-bottom: 14px;
 }
 
 .revealText {
   font-size: 24px;
   font-weight: 900;
+  color: var(--earth-4);
+}
+
+/* =====================================================
+   Animations（保留）
+===================================================== */
+.fade-in {
+  animation: fadeIn .6s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.zoom-in {
+  animation: zoomIn 1.2s ease forwards;
+}
+
+@keyframes zoomIn {
+  from { transform: scale(.95); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+/* =====================================================
+   Reveal Transition Overlay
+===================================================== */
+.revealTransition {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(180deg, var(--earth-1), var(--bg-main));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--earth-4);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.revealTransition.show {
+  opacity: 1;
 }
