@@ -1,4 +1,8 @@
-// app.js (ESM)
+// app.js  (必須用 <script type="module" src="./app.js"></script> 引入)
+
+// ------------------------------
+// 0) DOM
+// ------------------------------
 const phaseLabel = document.getElementById("phaseLabel");
 const phaseScratch = document.getElementById("phaseScratch");
 const phaseVote = document.getElementById("phaseVote");
@@ -19,7 +23,9 @@ const voteNote = document.getElementById("voteNote");
 
 const revealText = document.getElementById("revealText");
 
-// ========== 1) 徵兆卡內容（你可以自由改） ==========
+// ------------------------------
+// 1) 刮刮樂內容（可自行改）
+// ------------------------------
 const SIGNS = [
   { title: "肚子尖尖", desc: "民間說法：肚型比較尖，大家就愛猜「男寶」", tag: "趣味偏向：👦" },
   { title: "肚子圓圓", desc: "民間說法：肚型比較圓，大家就愛猜「女寶」", tag: "趣味偏向：👧" },
@@ -31,31 +37,29 @@ const SIGNS = [
   { title: "手腳浮腫", desc: "民俗也有各種說法，最重要是好好休息", tag: "趣味偏向：不一定" },
 ];
 
-scratchTotalEl.textContent = SIGNS.length;
+if (scratchTotalEl) scratchTotalEl.textContent = String(SIGNS.length);
 
-// ========== 2) 刮刮樂：用 ScratchCard-js ==========
-// ScratchCard-js 支援 percentToFinish / enabledPercentUpdate / callback / getPercent / scratch.move[1](https://masth0.github.io/ScratchCard/)[2](https://github.com/Masth0/ScratchCard)
-
+// ------------------------------
+// 2) 刮刮樂（依賴你已載入 vendor/scratchcard.min.js）
+// ScratchCard-js 支援 percentToFinish / enabledPercentUpdate / callback / getPercent / scratch.move
+// ------------------------------
 let scratchDoneCount = 0;
 const doneFlags = new Array(SIGNS.length).fill(false);
 
 function updateScratchProgress() {
-  scratchDoneEl.textContent = String(scratchDoneCount);
+  if (scratchDoneEl) scratchDoneEl.textContent = String(scratchDoneCount);
   const allDone = scratchDoneCount === SIGNS.length;
-  toVoteBtn.disabled = !allDone;
+  if (toVoteBtn) toVoteBtn.disabled = !allDone;
 }
 
 function makeCoverDataUrl(w = 600, h = 360) {
-  // 生成一張簡單的「灰色刮層」圖片（dataURL）
   const c = document.createElement("canvas");
   c.width = w; c.height = h;
   const ctx = c.getContext("2d");
 
-  // 背景
   ctx.fillStyle = "#b7c2d8";
   ctx.fillRect(0, 0, w, h);
 
-  // 紋理
   ctx.globalAlpha = 0.22;
   for (let i = 0; i < 80; i++) {
     ctx.fillStyle = i % 2 ? "#ffffff" : "#6b7896";
@@ -68,7 +72,6 @@ function makeCoverDataUrl(w = 600, h = 360) {
   }
   ctx.globalAlpha = 1;
 
-  // 問號文字
   ctx.fillStyle = "rgba(17,26,46,.65)";
   ctx.font = "900 64px system-ui, -apple-system, Segoe UI, Roboto, Noto Sans TC, sans-serif";
   ctx.textAlign = "center";
@@ -77,10 +80,10 @@ function makeCoverDataUrl(w = 600, h = 360) {
   return c.toDataURL("image/png");
 }
 
-const coverDataUrl = makeCoverDataUrl();
-
 function renderScratchCards() {
+  if (!scratchGrid) return;
   scratchGrid.innerHTML = "";
+  const coverDataUrl = makeCoverDataUrl();
 
   SIGNS.forEach((s, idx) => {
     const card = document.createElement("div");
@@ -102,14 +105,14 @@ function renderScratchCards() {
     card.appendChild(overlay);
     scratchGrid.appendChild(card);
 
-    // 建立 ScratchCard instance
+    // ScratchCard-js 全域物件：ScratchCard, SCRATCH_TYPE
     const sc = new window.ScratchCard(overlay, {
       scratchType: window.SCRATCH_TYPE.LINE,
       containerWidth: overlay.clientWidth,
       containerHeight: overlay.clientHeight,
       imageForwardSrc: coverDataUrl,
-      imageBackgroundSrc: "",      // 我們用 htmlBackground 展示文字
-      htmlBackground: "",          // 背景已在 bg div 中呈現
+      imageBackgroundSrc: "",
+      htmlBackground: "",
       clearZoneRadius: 26,
       enabledPercentUpdate: true,
       percentToFinish: 55,
@@ -122,42 +125,40 @@ function renderScratchCards() {
       },
     });
 
-    sc.init().then(() => {
-      // 可選：你想顯示即時刮除百分比時可用 sc.getPercent() [1](https://masth0.github.io/ScratchCard/)[2](https://github.com/Masth0/ScratchCard)
-      // sc.canvas.addEventListener("scratch.move", () => console.log(sc.getPercent()));
-    }).catch((err) => {
-      console.error("Scratch init error", err);
-    });
-
-    // 讓卡片縮放時重新適配（簡單處理：resize 重新載入）
-    window.addEventListener("resize", () => {
-      // 重新整理最省事（避免每張卡重新 init 的複雜度）
-      // 若你不想刷新，可自己做更細緻的 re-init
-    }, { passive: true });
+    sc.init().catch((err) => console.error("Scratch init error", err));
   });
+
+  updateScratchProgress();
 }
 
 renderScratchCards();
-updateScratchProgress();
 
-toVoteBtn.addEventListener("click", () => {
-  showPhase("vote");
-});
+if (toVoteBtn) {
+  toVoteBtn.addEventListener("click", () => showPhase("vote"));
+}
 
-// ========== 3) Firestore：票數 + 揭曉控制 ==========
-// 你需要把 firebaseConfig 換成你 Firebase 專案的設定。
-// 官方文件示例包含 initializeApp + getFirestore [7](https://firebase.google.cn/docs/firestore/manage-data/add-data?hl=zh-cn)
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+// ------------------------------
+// 3) Firebase / Firestore（把你提供的 config 整合進來）
+// ------------------------------
+// 你提供的版本是 12.11.0，我們直接用同版本，避免版本不一致
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
 import {
   getFirestore, doc, setDoc, updateDoc, onSnapshot, increment, getDoc
-} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+} from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
 
+// ✅ 你的 firebaseConfig（原封不動）
 const firebaseConfig = {
-  // TODO: 到 Firebase Console 複製你的設定貼在這裡
-  // apiKey: "...", authDomain: "...", projectId: "...", ...
+  apiKey: "AIzaSyAgfPqGcIKyI0iaZ7Cq71Nk5oi1S98u2_k",
+  authDomain: "gender-reveal-62aba.firebaseapp.com",
+  projectId: "gender-reveal-62aba",
+  storageBucket: "gender-reveal-62aba.firebasestorage.app",
+  messagingSenderId: "101869590091",
+  appId: "1:101869590091:web:3e8f1c87255c30e8741fce",
+  measurementId: "G-3ERELW3XR0"
 };
 
-const REVEAL_DOC_PATH = { col: "reveals", id: "baby-2026" }; // 你可改活動ID
+// Firestore 文件位置（你可以改 doc id）
+const REVEAL_DOC_PATH = { col: "reveals", id: "baby-2026" };
 const VOTED_KEY = `revealVoted:${REVEAL_DOC_PATH.id}`;
 
 let db, revealRef;
@@ -167,8 +168,7 @@ async function initFirestore() {
   db = getFirestore(app);
   revealRef = doc(db, REVEAL_DOC_PATH.col, REVEAL_DOC_PATH.id);
 
-  // 若 doc 不存在就建立一份初始資料（用 setDoc）
-  // setDoc 的概念與初始化示例可參考官方 add-data 文件 [7](https://firebase.google.cn/docs/firestore/manage-data/add-data?hl=zh-cn)
+  // 若文件不存在就建立初始欄位
   const snap = await getDoc(revealRef);
   if (!snap.exists()) {
     await setDoc(revealRef, {
@@ -179,7 +179,7 @@ async function initFirestore() {
     });
   }
 
-  // 監聽即時變更：官方說明 onSnapshot 會先立刻回呼一次，之後每次內容變動再回呼[3](https://firebase.google.com/docs/firestore/query-data/listen)[4](https://modularfirebase.web.app/common-use-cases/firestore/)
+  // 即時監聽文件更新（onSnapshot 會先回一次目前內容，之後變更再回）[1](https://dev.to/techwithsam/flutter-firebase-tutorial-2026-complete-auth-firestore-integration-simple-notes-app-1ane)[4](https://www.youtube.com/watch?v=0nN1n1iHTZ0)
   onSnapshot(revealRef, (docSnap) => {
     if (!docSnap.exists()) return;
     const data = docSnap.data();
@@ -188,82 +188,93 @@ async function initFirestore() {
     if (data.phase === "reveal") {
       showReveal(data.revealGender);
     }
+  }, (err) => {
+    console.error(err);
+    if (voteNote) voteNote.textContent = "Firestore 監聽失敗：" + (err?.message ?? err);
   });
+
+  if (voteNote) voteNote.textContent = "Firestore 已連線，請投票～";
 }
 
 function updateVoteUI(boy, girl) {
-  boyVotesEl.textContent = String(boy);
-  girlVotesEl.textContent = String(girl);
+  if (boyVotesEl) boyVotesEl.textContent = String(boy);
+  if (girlVotesEl) girlVotesEl.textContent = String(girl);
 
   const total = Math.max(1, boy + girl);
   const boyPct = Math.round((boy / total) * 100);
   const girlPct = 100 - boyPct;
-  boyBar.style.width = `${boyPct}%`;
-  girlBar.style.width = `${girlPct}%`;
+
+  if (boyBar) boyBar.style.width = `${boyPct}%`;
+  if (girlBar) girlBar.style.width = `${girlPct}%`;
 
   const voted = localStorage.getItem(VOTED_KEY);
   if (voted) {
-    voteBoyBtn.disabled = true;
-    voteGirlBtn.disabled = true;
-    voteNote.textContent = `你已投票：${voted === "boy" ? "男生" : "女生"}（可等待揭曉）`;
+    if (voteBoyBtn) voteBoyBtn.disabled = true;
+    if (voteGirlBtn) voteGirlBtn.disabled = true;
+    if (voteNote) voteNote.textContent = `你已投票：${voted === "boy" ? "男生" : "女生"}（等待揭曉）`;
   }
 }
 
 async function castVote(choice) {
-  if (!revealRef) return;
+  try {
+    if (!revealRef) {
+      if (voteNote) voteNote.textContent = "Firestore 尚未初始化（請確認 firebaseConfig/Firestore 已啟用）";
+      return;
+    }
+    const voted = localStorage.getItem(VOTED_KEY);
+    if (voted) return;
 
-  const voted = localStorage.getItem(VOTED_KEY);
-  if (voted) return;
+    // 原子遞增避免多人同時覆蓋 [5](https://docs.bswen.com/blog/2026-03-26-how-to-deploy-static-site-github-pages/)[6](https://stackoverflow.com/questions/61551044/babel-polyfill-is-deprecated-warning-in-create-react-app)
+    if (choice === "boy") {
+      await updateDoc(revealRef, { boyVotes: increment(1) });
+    } else {
+      await updateDoc(revealRef, { girlVotes: increment(1) });
+    }
 
-  // 原子遞增：increment(1)（避免多人同時投票時互相覆蓋）[5](https://oneuptime.com/blog/post/2026-02-17-how-to-use-field-transforms-in-firestore-for-atomic-increments-and-array-operations/view)[6](https://stackoverflow.com/questions/50762923/how-to-increment-existing-number-field-in-cloud-firestore)
-  if (choice === "boy") {
-    await updateDoc(revealRef, { boyVotes: increment(1) });
-  } else {
-    await updateDoc(revealRef, { girlVotes: increment(1) });
+    localStorage.setItem(VOTED_KEY, choice);
+    if (voteBoyBtn) voteBoyBtn.disabled = true;
+    if (voteGirlBtn) voteGirlBtn.disabled = true;
+    if (voteNote) voteNote.textContent = `你已投票：${choice === "boy" ? "男生" : "女生"}（等待揭曉）`;
+  } catch (err) {
+    console.error(err);
+    if (voteNote) voteNote.textContent = "投票失敗：" + (err?.message ?? err);
   }
-
-  localStorage.setItem(VOTED_KEY, choice);
-  voteBoyBtn.disabled = true;
-  voteGirlBtn.disabled = true;
-  voteNote.textContent = `你已投票：${choice === "boy" ? "男生" : "女生"}（可等待揭曉）`;
 }
 
-voteBoyBtn.addEventListener("click", () => castVote("boy"));
-voteGirlBtn.addEventListener("click", () => castVote("girl"));
+if (voteBoyBtn) voteBoyBtn.addEventListener("click", () => castVote("boy"));
+if (voteGirlBtn) voteGirlBtn.addEventListener("click", () => castVote("girl"));
 
-// ========== 4) Phase 切換 ==========
+// ------------------------------
+// 4) Phase 切換 / 揭曉
+// ------------------------------
 function showPhase(p) {
-  phaseScratch.classList.add("hidden");
-  phaseVote.classList.add("hidden");
-  phaseReveal.classList.add("hidden");
+  if (phaseScratch) phaseScratch.classList.add("hidden");
+  if (phaseVote) phaseVote.classList.add("hidden");
+  if (phaseReveal) phaseReveal.classList.add("hidden");
 
   if (p === "scratch") {
-    phaseLabel.textContent = "徵兆刮刮樂";
-    phaseScratch.classList.remove("hidden");
+    if (phaseLabel) phaseLabel.textContent = "徵兆刮刮樂";
+    if (phaseScratch) phaseScratch.classList.remove("hidden");
   } else if (p === "vote") {
-    phaseLabel.textContent = "投票猜測";
-    phaseVote.classList.remove("hidden");
+    if (phaseLabel) phaseLabel.textContent = "投票猜測";
+    if (phaseVote) phaseVote.classList.remove("hidden");
   } else {
-    phaseLabel.textContent = "揭曉";
-    phaseReveal.classList.remove("hidden");
+    if (phaseLabel) phaseLabel.textContent = "揭曉";
+    if (phaseReveal) phaseReveal.classList.remove("hidden");
   }
+}
+
+function showReveal(gender) {
+  showPhase("reveal");
+  const isBoy = gender === "boy";
+  if (revealText) revealText.textContent = isBoy ? "是「男生」！💙" : "是「女生」！💗";
 }
 
 // 初始顯示 scratch
 showPhase("scratch");
 
-// Firestore 初始化（若 config 沒填會報錯，填好即可）
-try {
-  await initFirestore();
-} catch (e) {
-  console.warn("Firestore 尚未完成設定或初始化失敗：", e);
-  // 沒 Firestore 時仍可玩第一關；第二關票數功能會不可用
-}
-
-// ========== 5) 揭曉 ==========
-function showReveal(gender) {
-  showPhase("reveal");
-  const isBoy = gender === "boy";
-  revealText.textContent = isBoy ? "是「男生」！💙" : "是「女生」！💗";
-  revealText.style.color = isBoy ? "var(--blue)" : "var(--pink)";
-}
+// 啟動 Firestore（若失敗會顯示在 voteNote）
+initFirestore().catch((err) => {
+  console.error(err);
+  if (voteNote) voteNote.textContent = "Firestore 初始化失敗：" + (err?.message ?? err);
+});
