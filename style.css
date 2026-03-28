@@ -18,7 +18,9 @@
 /* =====================================================
    Global Base
 ===================================================== */
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
 body {
   margin: 0;
@@ -27,48 +29,57 @@ body {
   font-family: system-ui, -apple-system, "Noto Sans TC", sans-serif;
 }
 
-h1, h2, h3, h4, h5 { color: var(--earth-4); }
-p { color: var(--text-main); }
-b, strong { color: var(--earth-4); }
+h1, h2, h3, h4, h5 {
+  color: var(--earth-4);
+}
 
-.muted, .small, .hint { color: var(--text-muted); }
-.center { text-align: center; }
+p {
+  color: var(--text-main);
+}
+
+b, strong {
+  color: var(--earth-4);
+}
+
+.muted,
+.small,
+.hint {
+  color: var(--text-muted);
+}
+
+.center {
+  text-align: center;
+}
 
 /* =====================================================
-   Layout ✅ RESPONSIVE FIX
+   Layout（✅ 關鍵：不再鎖死小寬度）
 ===================================================== */
 .wrap {
-  width: min(100%, 1100px);   /* ✅ 依螢幕大小自適應 */
+  width: 100%;
+  max-width: 1200px;          /* ✅ 桌機不小 */
   margin: 0 auto;
-  padding: clamp(16px, 3vw, 32px);
+  padding: 24px;
 }
 
-/* 平板以下幾乎滿版 */
 @media (max-width: 768px) {
   .wrap {
-    width: 100%;
     padding: 16px;
-  }
-}
-
-/* 超大螢幕限制行寬 */
-@media (min-width: 1400px) {
-  .wrap {
-    width: 1100px;
   }
 }
 
 /* =====================================================
    Header
 ===================================================== */
-.topbar { margin-bottom: 20px; }
+.topbar {
+  margin-bottom: 24px;
+}
 
 .status .chip {
   background: var(--earth-1);
   color: var(--earth-4);
   border-radius: 999px;
-  padding: 6px 12px;
-  font-size: 13px;
+  padding: 6px 14px;
+  font-size: 14px;
 }
 
 /* =====================================================
@@ -77,31 +88,49 @@ b, strong { color: var(--earth-4); }
 .card {
   background: var(--bg-card);
   border-radius: 22px;
-  padding: clamp(18px, 3vw, 28px);
-  margin-bottom: 24px;
+  padding: 28px;
+  margin-bottom: 28px;
   box-shadow: 0 14px 30px rgba(0,0,0,.08);
 }
 
 /* =====================================================
-   Phase visibility ✅ 穩定版
+   Phase Visibility（✅ 穩定版）
 ===================================================== */
-.hidden { display: none !important; }
+.hidden {
+  display: none !important;
+}
 
 #phaseScratch,
 #phaseVote,
-#phaseReveal { display: none; }
+#phaseReveal {
+  display: none;
+}
 
 #phaseScratch:not(.hidden),
 #phaseVote:not(.hidden),
-#phaseReveal:not(.hidden) { display: block; }
+#phaseReveal:not(.hidden) {
+  display: block;
+}
 
 /* =====================================================
-   Scratch Cards
+   Stage 1：Scratch Cards（✅ 固定比例，不再縮小）
 ===================================================== */
-.grid {
+#phaseScratch .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 18px;
+  grid-template-columns: repeat(4, 1fr);  /* ✅ 桌機固定 4 張 */
+  gap: 20px;
+}
+
+@media (max-width: 1024px) {
+  #phaseScratch .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  #phaseScratch .grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .scratchCard {
@@ -112,23 +141,25 @@ b, strong { color: var(--earth-4); }
   box-shadow: 0 10px 24px rgba(0,0,0,.12);
 }
 
-.scratchBg { padding: 18px; }
+.scratchBg {
+  padding: 20px;
+}
 
 .scratchBg .title {
   font-size: 18px;
   font-weight: 800;
-  color: var(--earth-4);
+  margin-bottom: 8px;
 }
 
 .scratchBg .desc {
-  font-size: 14px;
+  font-size: 15px;
   line-height: 1.6;
 }
 
 .scratchBg .tag {
   position: absolute;
-  right: 12px;
-  bottom: 12px;
+  right: 14px;
+  bottom: 14px;
   font-size: 12px;
   padding: 4px 12px;
   border-radius: 999px;
@@ -143,41 +174,82 @@ b, strong { color: var(--earth-4); }
 }
 
 /* =====================================================
-   Buttons
+   Stage 2：Vote（✅ 行動導向，大按鈕）
 ===================================================== */
-.btn, .voteBtn {
-  background: var(--earth-2);
-  color: var(--earth-4);
-  border: none;
+#phaseVote .card {
+  padding-top: 48px;
+  padding-bottom: 48px;
+}
+
+/* 投票區集中顯示 */
+#phaseVote .voteRow {
+  display: flex;
+  gap: 28px;
+  max-width: 560px;
+  margin: 32px auto 0;
+}
+
+/* ✅ 投票按鈕一定要比第一關大 */
+#phaseVote .voteBtn {
+  flex: 1;
+  font-size: 20px;
+  font-weight: 800;
+  min-height: 72px;
+  padding: 20px 24px;
   border-radius: 999px;
-  font-weight: 700;
+  border: none;
   cursor: pointer;
 }
 
-.voteRow {
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
+#phaseVote .voteBtn.boy {
+  background: #dfeaf3;
+}
+
+#phaseVote .voteBtn.girl {
+  background: var(--earth-1);
+}
+
+/* 手機：一顆一行，超好點 */
+@media (max-width: 640px) {
+  #phaseVote .voteRow {
+    flex-direction: column;
+  }
+
+  #phaseVote .voteBtn {
+    width: 100%;
+    min-height: 76px;
+    font-size: 20px;
+  }
+}
+
+/* 投票結果區 */
+#phaseVote .barWrap {
+  margin-top: 36px;
 }
 
 /* =====================================================
    Bars
 ===================================================== */
 .bar {
-  height: 10px;
+  height: 12px;
   border-radius: 999px;
   background: var(--earth-1);
   overflow: hidden;
   display: flex;
 }
 
-.barFill.girl { background: var(--earth-3); }
-.barFill.boy  { background: #a8c8e6; }
+.barFill.boy {
+  background: #a8c8e6;
+}
+
+.barFill.girl {
+  background: var(--earth-3);
+}
 
 .barLabels {
   display: flex;
   justify-content: space-between;
-  margin-top: 6px;
+  margin-top: 8px;
 }
 
 /* =====================================================
@@ -205,14 +277,18 @@ b, strong { color: var(--earth-4); }
 /* =====================================================
    Animations
 ===================================================== */
-.fade-in { animation: fadeIn .6s ease forwards; }
+.fade-in {
+  animation: fadeIn .6s ease forwards;
+}
 
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
-.zoom-in { animation: zoomIn 1.2s ease forwards; }
+.zoom-in {
+  animation: zoomIn 1.2s ease forwards;
+}
 
 @keyframes zoomIn {
   from { transform: scale(0.92); opacity: 0; }
@@ -220,71 +296,21 @@ b, strong { color: var(--earth-4); }
 }
 
 /* =====================================================
-   Reveal Box
+   Stage 3：Reveal
 ===================================================== */
-.revealBox { text-align: center; }
+.revealBox {
+  text-align: center;
+}
 
 .babyImg {
-  width: min(80vw, 260px);  /* ✅ 隨螢幕縮放 */
-  border-radius: 20px;
+  width: min(320px, 80vw);   /* ✅ 桌機夠大，手機不爆 */
+  border-radius: 22px;
   box-shadow: 0 18px 40px rgba(0,0,0,.25);
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 
 .revealText {
-  font-size: clamp(22px, 4vw, 30px); /* ✅ 響應式字級 */
+  font-size: clamp(24px, 4vw, 32px);
   font-weight: 900;
   color: var(--earth-4);
-}
-
-/* =====================================================
-   STAGE RATIO FIX ✅ 第一、二階段比例校正
-===================================================== */
-
-/* ---------- Stage 1：刮刮樂卡片 ---------- */
-/* 限制桌機最多 4 欄，避免卡片太小 */
-.grid {
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-}
-
-@media (min-width: 1024px) {
-  .grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-/* ---------- Stage 2：投票按鈕 ---------- */
-.voteRow {
-  gap: 20px;
-}
-
-/* 投票是主要操作 → 不允許太小 */
-.voteBtn {
-  min-height: 56px;
-  font-size: 18px;
-  padding: 16px 20px;
-}
-
-/* 手機版：一行一顆大按鈕 */
-@media (max-width: 640px) {
-  .voteRow {
-    flex-direction: column;
-  }
-
-  .voteBtn {
-    width: 100%;
-    font-size: 18px;
-    min-height: 60px;
-  }
-}
-
-/* ---------- Stage 1 → Stage 2 轉換感 ---------- */
-/* 投票階段卡片稍微放大，強化層級 */
-#phaseVote .card {
-  padding: clamp(22px, 4vw, 32px);
-}
-
-/* 進入投票時，標題更醒目 */
-#phaseVote h2 {
-  font-size: clamp(22px, 4vw, 28px);
 }
