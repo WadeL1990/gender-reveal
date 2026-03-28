@@ -79,9 +79,9 @@ p {
   flex-direction: column;
 }
 
-#phaseScratch > *,
-#phaseVote > *,
-#phaseReveal > * {
+#phaseScratch > .wrap,
+#phaseVote > .wrap,
+#phaseReveal > .wrap {
   flex-shrink: 0;
 }
 
