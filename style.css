@@ -301,3 +301,48 @@ b, strong {
   font-weight: 900;
   color: var(--earth-4);
 }
+
+/* =====================================================
+   FINAL TEXT CONTRAST OVERRIDE  ✅一定要放最底部
+===================================================== */
+
+/* 所有卡片、區塊內文字強制深色 */
+.card *,
+section *,
+header * {
+  color: var(--text-main) !important;
+}
+
+/* Header 狀態 chip */
+.status .chip {
+  color: var(--earth-4) !important;
+  background: var(--earth-1) !important;
+}
+
+/* 按鈕文字（避免白字） */
+.btn,
+.voteBtn {
+  color: var(--earth-4) !important;
+}
+
+/* 投票區數字 */
+.barLabels,
+.barLabels b {
+  color: var(--earth-4) !important;
+}
+
+/* 揭曉轉場文字 */
+.revealTransition {
+  color: var(--earth-4) !important;
+}
+
+/* 揭曉文字 */
+.revealText {
+  color: var(--earth-4) !important;
+}
+
+/* 防止任何地方殘留白字 */
+[style*="color: #fff"],
+[style*="color:#fff"] {
+  color: var(--earth-4) !important;
+}
