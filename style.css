@@ -236,3 +236,55 @@ b, strong { color: var(--earth-4); }
   font-weight: 900;
   color: var(--earth-4);
 }
+
+/* =====================================================
+   STAGE RATIO FIX ✅ 第一、二階段比例校正
+===================================================== */
+
+/* ---------- Stage 1：刮刮樂卡片 ---------- */
+/* 限制桌機最多 4 欄，避免卡片太小 */
+.grid {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* ---------- Stage 2：投票按鈕 ---------- */
+.voteRow {
+  gap: 20px;
+}
+
+/* 投票是主要操作 → 不允許太小 */
+.voteBtn {
+  min-height: 56px;
+  font-size: 18px;
+  padding: 16px 20px;
+}
+
+/* 手機版：一行一顆大按鈕 */
+@media (max-width: 640px) {
+  .voteRow {
+    flex-direction: column;
+  }
+
+  .voteBtn {
+    width: 100%;
+    font-size: 18px;
+    min-height: 60px;
+  }
+}
+
+/* ---------- Stage 1 → Stage 2 轉換感 ---------- */
+/* 投票階段卡片稍微放大，強化層級 */
+#phaseVote .card {
+  padding: clamp(22px, 4vw, 32px);
+}
+
+/* 進入投票時，標題更醒目 */
+#phaseVote h2 {
+  font-size: clamp(22px, 4vw, 28px);
+}
