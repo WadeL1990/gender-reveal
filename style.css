@@ -71,9 +71,9 @@ p {
 /* =====================================================
    ✅ Phase height（真正生效的關鍵）
 ===================================================== */
-#phaseScratch,
-#phaseVote,
-#phaseReveal {
+#phaseScratch:not(.hidden),
+#phaseVote:not(.hidden),
+#phaseReveal:not(.hidden) {
   min-height: 100vh;        /* ✅ 每一關至少一整個畫面 */
   display: flex;
   flex-direction: column;
@@ -90,6 +90,10 @@ p {
 ===================================================== */
 .grid {
   display: block;          /* ✅ 一張一張排，最穩 */
+}
+
+.hidden {
+  display: none !important;
 }
 
 .scratchCard {
