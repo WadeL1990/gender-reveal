@@ -195,15 +195,20 @@
    Earth Tone Theme
 ========================= */
 :root {
-  --bg-main: #faf7f2;
+  /*背景*/
+  --bg-main: #faf7f2; /*米白*/
   --bg-card: #ffffff;
+
+  /*點綴*/
   --earth-1: #e6dccf;
   --earth-2: #c9b8a0;
   --earth-3: #9c7f5a;
   --earth-4: #6f5a3e;
   --accent:  #7a8b5a;
-  --text-main: #3f3428;
-  --text-muted: #7b6a55;
+
+  /*文字*/
+  --text-main: #3f3428; /*深棕:主要文字*/
+  --text-muted: #7b6a55; /*中棕:說明文字*/
 }
 
 /* =========================
@@ -369,4 +374,31 @@ body {
   font-size: 28px;
   font-weight: 900;
   color: var(--earth-3);
+}
+
+/* =========================
+   Text Contrast Fix
+========================= */
+
+/* 全站預設文字 */
+body, 
+.card, 
+section, 
+header, 
+p, 
+h1, h2, h3, h4, h5 {
+  color: var(--text-main);
+}
+
+/* 次要說明文字 */
+.muted,
+.small,
+.hint {
+  color: var(--text-muted);
+}
+
+/* 投票數字、強調文字 */
+b,
+strong {
+  color: var(--earth-4);
 }
