@@ -346,3 +346,26 @@ header * {
 [style*="color:#fff"] {
   color: var(--earth-4) !important;
 }
+
+/* =====================================================
+   PHASE VISIBILITY FIX ✅ 一定要放在最後
+===================================================== */
+
+/* 強制隱藏被標記為 hidden 的區塊 */
+.hidden {
+  display: none !important;
+}
+
+/* 保證卡片區塊只在被顯示時才出現 */
+#phaseScratch,
+#phaseVote,
+#phaseReveal {
+  display: none;
+}
+
+/* JS 控制時，會移除 hidden，所以要能顯示 */
+#phaseScratch:not(.hidden),
+#phaseVote:not(.hidden),
+#phaseReveal:not(.hidden) {
+  display: block;
+}
