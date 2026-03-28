@@ -292,7 +292,7 @@ function renderRevealUI(gender) {
   }
 
   // Optional: swap image if you later prepare two assets
-  // if (babyImg) babyImg.src = g === "girl" ? "./assets/baby-girl.png" : "./assets/baby-boy.png";
+  // if (babyImg) babyImg.src = g === "girl" ? "./assets/baby.jpg";
 }
 
 // Listener: ONLY updates counts + cached revealGender (DO NOT jump phases)
