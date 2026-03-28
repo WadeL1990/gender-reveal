@@ -18,9 +18,7 @@
 /* =====================================================
    Global Base
 ===================================================== */
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
@@ -29,44 +27,41 @@ body {
   font-family: system-ui, -apple-system, "Noto Sans TC", sans-serif;
 }
 
-/* 基本文字 */
-h1, h2, h3, h4, h5 {
-  color: var(--earth-4);
-}
+h1, h2, h3, h4, h5 { color: var(--earth-4); }
+p { color: var(--text-main); }
+b, strong { color: var(--earth-4); }
 
-p {
-  color: var(--text-main);
-}
-
-b, strong {
-  color: var(--earth-4);
-}
+.muted, .small, .hint { color: var(--text-muted); }
+.center { text-align: center; }
 
 /* =====================================================
-   Utility
-===================================================== */
-.muted,
-.small,
-.hint {
-  color: var(--text-muted);
-}
-
-.center {
-  text-align: center;
-}
-
-/* =====================================================
-   Layout
+   Layout ✅ RESPONSIVE FIX
 ===================================================== */
 .wrap {
-  max-width: 720px;
+  width: min(100%, 1100px);   /* ✅ 依螢幕大小自適應 */
   margin: 0 auto;
-  padding: 16px;
+  padding: clamp(16px, 3vw, 32px);
 }
 
-.topbar {
-  margin-bottom: 20px;
+/* 平板以下幾乎滿版 */
+@media (max-width: 768px) {
+  .wrap {
+    width: 100%;
+    padding: 16px;
+  }
 }
+
+/* 超大螢幕限制行寬 */
+@media (min-width: 1400px) {
+  .wrap {
+    width: 1100px;
+  }
+}
+
+/* =====================================================
+   Header
+===================================================== */
+.topbar { margin-bottom: 20px; }
 
 .status .chip {
   background: var(--earth-1);
@@ -82,37 +77,31 @@ b, strong {
 .card {
   background: var(--bg-card);
   border-radius: 22px;
-  padding: 22px;
-  margin-bottom: 22px;
+  padding: clamp(18px, 3vw, 28px);
+  margin-bottom: 24px;
   box-shadow: 0 14px 30px rgba(0,0,0,.08);
 }
 
 /* =====================================================
-   Phase visibility ✅ 關鍵
+   Phase visibility ✅ 穩定版
 ===================================================== */
-.hidden {
-  display: none !important;
-}
+.hidden { display: none !important; }
 
 #phaseScratch,
 #phaseVote,
-#phaseReveal {
-  display: none;
-}
+#phaseReveal { display: none; }
 
 #phaseScratch:not(.hidden),
 #phaseVote:not(.hidden),
-#phaseReveal:not(.hidden) {
-  display: block;
-}
+#phaseReveal:not(.hidden) { display: block; }
 
 /* =====================================================
    Scratch Cards
 ===================================================== */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 18px;
 }
 
 .scratchCard {
@@ -123,9 +112,7 @@ b, strong {
   box-shadow: 0 10px 24px rgba(0,0,0,.12);
 }
 
-.scratchBg {
-  padding: 18px;
-}
+.scratchBg { padding: 18px; }
 
 .scratchBg .title {
   font-size: 18px;
@@ -136,7 +123,6 @@ b, strong {
 .scratchBg .desc {
   font-size: 14px;
   line-height: 1.6;
-  color: var(--text-main);
 }
 
 .scratchBg .tag {
@@ -159,8 +145,7 @@ b, strong {
 /* =====================================================
    Buttons
 ===================================================== */
-.btn,
-.voteBtn {
+.btn, .voteBtn {
   background: var(--earth-2);
   color: var(--earth-4);
   border: none;
@@ -171,7 +156,8 @@ b, strong {
 
 .voteRow {
   display: flex;
-  gap: 12px;
+  gap: 16px;
+  flex-wrap: wrap;
 }
 
 /* =====================================================
@@ -185,16 +171,13 @@ b, strong {
   display: flex;
 }
 
-.barFill.girl {
-  background: var(--earth-3);
-}
-
-.barFill.boy {
-  background: #a8c8e6;
-}
+.barFill.girl { background: var(--earth-3); }
+.barFill.boy  { background: #a8c8e6; }
 
 .barLabels {
-  color: var(--text-main);
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
 }
 
 /* =====================================================
@@ -222,18 +205,14 @@ b, strong {
 /* =====================================================
    Animations
 ===================================================== */
-.fade-in {
-  animation: fadeIn .6s ease forwards;
-}
+.fade-in { animation: fadeIn .6s ease forwards; }
 
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(10px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
-.zoom-in {
-  animation: zoomIn 1.2s ease forwards;
-}
+.zoom-in { animation: zoomIn 1.2s ease forwards; }
 
 @keyframes zoomIn {
   from { transform: scale(0.92); opacity: 0; }
@@ -243,19 +222,17 @@ b, strong {
 /* =====================================================
    Reveal Box
 ===================================================== */
-.revealBox {
-  text-align: center;
-}
+.revealBox { text-align: center; }
 
 .babyImg {
-  max-width: 240px;
+  width: min(80vw, 260px);  /* ✅ 隨螢幕縮放 */
   border-radius: 20px;
   box-shadow: 0 18px 40px rgba(0,0,0,.25);
   margin-bottom: 16px;
 }
 
 .revealText {
-  font-size: 28px;
+  font-size: clamp(22px, 4vw, 30px); /* ✅ 響應式字級 */
   font-weight: 900;
   color: var(--earth-4);
 }
