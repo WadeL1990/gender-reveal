@@ -1,5 +1,5 @@
 /* =====================================================
-   Theme (Earth Tone)
+   Theme
 ===================================================== */
 :root {
   --bg-main: #faf7f2;
@@ -16,19 +16,45 @@
 }
 
 /* =====================================================
-   Base
+   Base（⭐ 高度關鍵）
 ===================================================== */
-* {
-  box-sizing: border-box;
+html, body {
+  height: 100%;
 }
 
 body {
   margin: 0;
+  display: flex;
+  flex-direction: column;
   background: linear-gradient(180deg, #fff 0%, var(--bg-main) 100%);
   font-family: system-ui, -apple-system, "Noto Sans TC", sans-serif;
   color: var(--text-main);
 }
 
+* {
+  box-sizing: border-box;
+}
+
+/* =====================================================
+   Layout（⭐ 滿版關鍵）
+===================================================== */
+.section {
+  width: 100%;
+  min-height: 100vh;        /* ⭐ 解決底部空白 */
+  display: flex;
+  flex-direction: column;
+}
+
+.wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px;
+  flex: 1;                 /* ⭐ 撐開高度 */
+}
+
+/* =====================================================
+   Typography
+===================================================== */
 h1, h2, h3 {
   color: var(--earth-4);
 }
@@ -37,23 +63,6 @@ p { color: var(--text-main); }
 
 .muted, .hint, .small {
   color: var(--text-muted);
-}
-
-/* =====================================================
-   Layout（滿版區塊 + 內容置中）
-===================================================== */
-
-/* 🔵 滿版區塊（背景會撐滿整個畫面） */
-.section {
-  width: 100%;
-  padding: 24px 0; /*增加上下留白*/
-}
-
-/* 🟢 內容容器（控制閱讀寬度） */
-.wrap {
-  max-width: 1200px;   /* 👉 可自行調整 960 / 1200 / 1440 */
-  margin: 0 auto;
-  padding: 16px;
 }
 
 /* =====================================================
@@ -68,26 +77,7 @@ p { color: var(--text-main); }
 }
 
 /* =====================================================
-   Phase control
-===================================================== */
-.hidden {
-  display: none !important;
-}
-
-#phaseScratch,
-#phaseVote,
-#phaseReveal {
-  display: none;
-}
-
-#phaseScratch:not(.hidden),
-#phaseVote:not(.hidden),
-#phaseReveal:not(.hidden) {
-  display: block;
-}
-
-/* =====================================================
-   Scratch Cards
+   Grid
 ===================================================== */
 .grid {
   display: grid;
@@ -95,54 +85,14 @@ p { color: var(--text-main); }
   gap: 14px;
 }
 
-.scratchCard {
-  position: relative;
-  background: linear-gradient(160deg, var(--earth-1), #fff);
-  border-radius: 16px;
-  overflow: hidden;
-}
-
-.scratchBg {
-  padding: 16px;
-}
-
-.scratchBg .title {
-  font-size: 16px;
-  font-weight: 800;
-  margin-bottom: 6px;
-}
-
-.scratchBg .desc {
-  font-size: 14px;
-  line-height: 1.6;
-}
-
-.scratchBg .tag {
-  position: absolute;
-  right: 10px;
-  bottom: 10px;
-  font-size: 12px;
-  padding: 3px 10px;
-  border-radius: 999px;
-  background: rgba(122,139,90,.15);
-  color: var(--accent);
-}
-
-.scratchOverlay {
-  position: absolute;
-  inset: 0;
-}
-
 /* =====================================================
    Buttons
 ===================================================== */
 .btn {
   padding: 10px 16px;
-  font-size: 14px;
   border-radius: 999px;
   border: none;
   background: var(--earth-2);
-  color: var(--earth-4);
 }
 
 .voteRow {
@@ -152,40 +102,13 @@ p { color: var(--text-main); }
 
 .voteBtn {
   flex: 1;
-  padding: 12px 16px;
-  font-size: 16px;
+  padding: 12px;
   border-radius: 999px;
   border: none;
-  cursor: pointer;
 }
 
-.voteBtn.boy {
-  background: #dfeaf3;
-}
-
-.voteBtn.girl {
-  background: var(--earth-1);
-}
-
-/* =====================================================
-   Bars
-===================================================== */
-.bar {
-  height: 10px;
-  border-radius: 999px;
-  background: var(--earth-1);
-  overflow: hidden;
-  display: flex;
-}
-
-.barFill.boy { background: #a8c8e6; }
-.barFill.girl { background: var(--earth-3); }
-
-.barLabels {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 6px;
-}
+.voteBtn.boy { background: #dfeaf3; }
+.voteBtn.girl { background: var(--earth-1); }
 
 /* =====================================================
    Reveal
@@ -197,32 +120,9 @@ p { color: var(--text-main); }
 .babyImg {
   max-width: 220px;
   border-radius: 18px;
-  margin-bottom: 14px;
 }
 
 .revealText {
   font-size: 24px;
   font-weight: 900;
-  color: var(--earth-4);
-}
-
-/* =====================================================
-   Animations
-===================================================== */
-.fade-in {
-  animation: fadeIn .6s ease forwards;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-.zoom-in {
-  animation: zoomIn 1.2s ease forwards;
-}
-
-@keyframes zoomIn {
-  from { transform: scale(.95); opacity: 0; }
-  to   { transform: scale(1); opacity: 1; }
 }
