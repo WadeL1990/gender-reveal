@@ -1,30 +1,65 @@
-// app.js  (必須用 <script type="module" src="./app.js"></script> 引入)
+// app.js (ES Module)
+// index.html 必須用：<script type="module" src="./app.js"></script>
+// 並且要先載入 ScratchCard：<script src="./vendor/scratchcard.min.js"></script>
+
+console.log("app.js version = 2026-03-28-2");
 
 // ------------------------------
-// 0) DOM
+// 0) DOM helpers
 // ------------------------------
-const phaseLabel = document.getElementById("phaseLabel");
-const phaseScratch = document.getElementById("phaseScratch");
-const phaseVote = document.getElementById("phaseVote");
-const phaseReveal = document.getElementById("phaseReveal");
+const $ = (id) => document.getElementById(id);
 
-const scratchGrid = document.getElementById("scratchGrid");
-const scratchDoneEl = document.getElementById("scratchDone");
-const scratchTotalEl = document.getElementById("scratchTotal");
-const toVoteBtn = document.getElementById("toVoteBtn");
+const phaseLabel = $("phaseLabel");
+const phaseScratch = $("phaseScratch");
+const phaseVote = $("phaseVote");
+const phaseReveal = $("phaseReveal");
 
-const voteBoyBtn = document.getElementById("voteBoy");
-const voteGirlBtn = document.getElementById("voteGirl");
-const boyVotesEl = document.getElementById("boyVotes");
-const girlVotesEl = document.getElementById("girlVotes");
-const boyBar = document.getElementById("boyBar");
-const girlBar = document.getElementById("girlBar");
-const voteNote = document.getElementById("voteNote");
+const scratchGrid = $("scratchGrid");
+const scratchDoneEl = $("scratchDone");
+const scratchTotalEl = $("scratchTotal");
+const toVoteBtn = $("toVoteBtn");
 
-const revealText = document.getElementById("revealText");
+const voteBoyBtn = $("voteBoy");
+const voteGirlBtn = $("voteGirl");
+const boyVotesEl = $("boyVotes");
+const girlVotesEl = $("girlVotes");
+const boyBar = $("boyBar");
+const girlBar = $("girlBar");
+const voteNote = $("voteNote");
+
+const revealText = $("revealText");
 
 // ------------------------------
-// 1) 刮刮樂內容（可自行改）
+// 1) Phase control
+// ------------------------------
+function showPhase(p) {
+  if (phaseScratch) phaseScratch.classList.add("hidden");
+  if (phaseVote) phaseVote.classList.add("hidden");
+  if (phaseReveal) phaseReveal.classList.add("hidden");
+
+  if (p === "scratch") {
+    if (phaseLabel) phaseLabel.textContent = "徵兆刮刮樂";
+    if (phaseScratch) phaseScratch.classList.remove("hidden");
+  } else if (p === "vote") {
+    if (phaseLabel) phaseLabel.textContent = "投票猜測";
+    if (phaseVote) phaseVote.classList.remove("hidden");
+  } else if (p === "reveal") {
+    if (phaseLabel) phaseLabel.textContent = "揭曉";
+    if (phaseReveal) phaseReveal.classList.remove("hidden");
+  }
+}
+
+function showReveal(gender) {
+  showPhase("reveal");
+  const isBoy = gender === "boy";
+  if (revealText) revealText.textContent = isBoy ? "是「男生」！💙" : "是「女生」！💗";
+}
+
+// 初始畫面
+showPhase("scratch");
+
+// ------------------------------
+// 2) Scratch cards (Stage 1)
 // ------------------------------
 const SIGNS = [
   { title: "肚子尖尖", desc: "民間說法：肚型比較尖，大家就愛猜「男寶」", tag: "趣味偏向：👦" },
@@ -37,14 +72,10 @@ const SIGNS = [
   { title: "手腳浮腫", desc: "民俗也有各種說法，最重要是好好休息", tag: "趣味偏向：不一定" },
 ];
 
-if (scratchTotalEl) scratchTotalEl.textContent = String(SIGNS.length);
-
-// ------------------------------
-// 2) 刮刮樂（依賴你已載入 vendor/scratchcard.min.js）
-// ScratchCard-js 支援 percentToFinish / enabledPercentUpdate / callback / getPercent / scratch.move
-// ------------------------------
 let scratchDoneCount = 0;
 const doneFlags = new Array(SIGNS.length).fill(false);
+
+if (scratchTotalEl) scratchTotalEl.textContent = String(SIGNS.length);
 
 function updateScratchProgress() {
   if (scratchDoneEl) scratchDoneEl.textContent = String(scratchDoneCount);
@@ -82,8 +113,14 @@ function makeCoverDataUrl(w = 600, h = 360) {
 
 function renderScratchCards() {
   if (!scratchGrid) return;
+
   scratchGrid.innerHTML = "";
   const coverDataUrl = makeCoverDataUrl();
+
+  if (!window.ScratchCard || !window.SCRATCH_TYPE) {
+    console.error("ScratchCard library not loaded. Check ./vendor/scratchcard.min.js");
+    return;
+  }
 
   SIGNS.forEach((s, idx) => {
     const card = document.createElement("div");
@@ -105,7 +142,6 @@ function renderScratchCards() {
     card.appendChild(overlay);
     scratchGrid.appendChild(card);
 
-    // ScratchCard-js 全域物件：ScratchCard, SCRATCH_TYPE
     const sc = new window.ScratchCard(overlay, {
       scratchType: window.SCRATCH_TYPE.LINE,
       containerWidth: overlay.clientWidth,
@@ -132,21 +168,28 @@ function renderScratchCards() {
 }
 
 renderScratchCards();
+updateScratchProgress();
 
 if (toVoteBtn) {
   toVoteBtn.addEventListener("click", () => showPhase("vote"));
 }
 
 // ------------------------------
-// 3) Firebase / Firestore（把你提供的 config 整合進來）
+// 3) Firebase / Firestore (Stage 2 + Stage 3 control)
 // ------------------------------
-// 你提供的版本是 12.11.0，我們直接用同版本，避免版本不一致
+// ✅ 依照 Firebase Console「Use a <script> tag」(CDN) 建議的 modular imports
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
 import {
-  getFirestore, doc, setDoc, updateDoc, onSnapshot, increment, getDoc
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+  onSnapshot,
+  increment,
 } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-firestore.js";
 
-// ✅ 你的 firebaseConfig（原封不動）
+// ✅ 你提供的 firebaseConfig（原封不動）
 const firebaseConfig = {
   apiKey: "AIzaSyAgfPqGcIKyI0iaZ7Cq71Nk5oi1S98u2_k",
   authDomain: "gender-reveal-62aba.firebaseapp.com",
@@ -154,46 +197,30 @@ const firebaseConfig = {
   storageBucket: "gender-reveal-62aba.firebasestorage.app",
   messagingSenderId: "101869590091",
   appId: "1:101869590091:web:3e8f1c87255c30e8741fce",
-  measurementId: "G-3ERELW3XR0"
+  measurementId: "G-3ERELW3XR0",
 };
 
-// Firestore 文件位置（你可以改 doc id）
+// ✅ 防呆：立刻印出 projectId（如果這裡是 undefined 就代表你載到舊版檔案或被覆蓋）
+console.log("[Firebase] projectId =", firebaseConfig.projectId);
+
+const firebaseApp = initializeApp(firebaseConfig);
+const db = getFirestore(firebaseApp);
+
+// 你投票文件位置（可改 id）
 const REVEAL_DOC_PATH = { col: "reveals", id: "baby-2026" };
+const revealRef = doc(db, REVEAL_DOC_PATH.col, REVEAL_DOC_PATH.id);
 const VOTED_KEY = `revealVoted:${REVEAL_DOC_PATH.id}`;
 
-let db, revealRef;
-
-async function initFirestore() {
-  const app = initializeApp(firebaseConfig);
-  db = getFirestore(app);
-  revealRef = doc(db, REVEAL_DOC_PATH.col, REVEAL_DOC_PATH.id);
-
-  // 若文件不存在就建立初始欄位
+async function ensureRevealDoc() {
   const snap = await getDoc(revealRef);
   if (!snap.exists()) {
     await setDoc(revealRef, {
       boyVotes: 0,
       girlVotes: 0,
-      phase: "vote",
-      revealGender: "boy"
+      phase: "vote",        // "vote" or "reveal"
+      revealGender: "boy",  // "boy" or "girl"
     });
   }
-
-  // 即時監聽文件更新（onSnapshot 會先回一次目前內容，之後變更再回）[1](https://dev.to/techwithsam/flutter-firebase-tutorial-2026-complete-auth-firestore-integration-simple-notes-app-1ane)[4](https://www.youtube.com/watch?v=0nN1n1iHTZ0)
-  onSnapshot(revealRef, (docSnap) => {
-    if (!docSnap.exists()) return;
-    const data = docSnap.data();
-    updateVoteUI(data.boyVotes ?? 0, data.girlVotes ?? 0);
-
-    if (data.phase === "reveal") {
-      showReveal(data.revealGender);
-    }
-  }, (err) => {
-    console.error(err);
-    if (voteNote) voteNote.textContent = "Firestore 監聽失敗：" + (err?.message ?? err);
-  });
-
-  if (voteNote) voteNote.textContent = "Firestore 已連線，請投票～";
 }
 
 function updateVoteUI(boy, girl) {
@@ -215,16 +242,31 @@ function updateVoteUI(boy, girl) {
   }
 }
 
+function startRevealListener() {
+  onSnapshot(
+    revealRef,
+    (docSnap) => {
+      if (!docSnap.exists()) return;
+      const data = docSnap.data();
+
+      updateVoteUI(data.boyVotes ?? 0, data.girlVotes ?? 0);
+
+      if (data.phase === "reveal") {
+        showReveal(data.revealGender);
+      }
+    },
+    (err) => {
+      console.error(err);
+      if (voteNote) voteNote.textContent = "Firestore 監聽失敗：" + (err?.message ?? err);
+    }
+  );
+}
+
 async function castVote(choice) {
   try {
-    if (!revealRef) {
-      if (voteNote) voteNote.textContent = "Firestore 尚未初始化（請確認 firebaseConfig/Firestore 已啟用）";
-      return;
-    }
     const voted = localStorage.getItem(VOTED_KEY);
     if (voted) return;
 
-    // 原子遞增避免多人同時覆蓋 [5](https://docs.bswen.com/blog/2026-03-26-how-to-deploy-static-site-github-pages/)[6](https://stackoverflow.com/questions/61551044/babel-polyfill-is-deprecated-warning-in-create-react-app)
     if (choice === "boy") {
       await updateDoc(revealRef, { boyVotes: increment(1) });
     } else {
@@ -232,6 +274,7 @@ async function castVote(choice) {
     }
 
     localStorage.setItem(VOTED_KEY, choice);
+
     if (voteBoyBtn) voteBoyBtn.disabled = true;
     if (voteGirlBtn) voteGirlBtn.disabled = true;
     if (voteNote) voteNote.textContent = `你已投票：${choice === "boy" ? "男生" : "女生"}（等待揭曉）`;
@@ -241,40 +284,25 @@ async function castVote(choice) {
   }
 }
 
-if (voteBoyBtn) voteBoyBtn.addEventListener("click", () => castVote("boy"));
-if (voteGirlBtn) voteGirlBtn.addEventListener("click", () => castVote("girl"));
+function bindVoteButtons() {
+  if (voteBoyBtn) voteBoyBtn.addEventListener("click", () => castVote("boy"));
+  if (voteGirlBtn) voteGirlBtn.addEventListener("click", () => castVote("girl"));
+}
 
 // ------------------------------
-// 4) Phase 切換 / 揭曉
+// 4) Boot Firestore
 // ------------------------------
-function showPhase(p) {
-  if (phaseScratch) phaseScratch.classList.add("hidden");
-  if (phaseVote) phaseVote.classList.add("hidden");
-  if (phaseReveal) phaseReveal.classList.add("hidden");
-
-  if (p === "scratch") {
-    if (phaseLabel) phaseLabel.textContent = "徵兆刮刮樂";
-    if (phaseScratch) phaseScratch.classList.remove("hidden");
-  } else if (p === "vote") {
-    if (phaseLabel) phaseLabel.textContent = "投票猜測";
-    if (phaseVote) phaseVote.classList.remove("hidden");
-  } else {
-    if (phaseLabel) phaseLabel.textContent = "揭曉";
-    if (phaseReveal) phaseReveal.classList.remove("hidden");
+(async function bootFirestore() {
+  try {
+    if (voteNote) voteNote.textContent = "Firestore 連線中…";
+    await ensureRevealDoc();
+    startRevealListener();
+    bindVoteButtons();
+    if (voteNote) voteNote.textContent = "Firestore 已連線，請投票～";
+  } catch (err) {
+    console.error(err);
+    if (voteNote) voteNote.textContent =
+      "Firestore 初始化失敗：" + (err?.message ?? err) +
+      "（請確認 Firestore Database 已建立＆Rules 允許）";
   }
-}
-
-function showReveal(gender) {
-  showPhase("reveal");
-  const isBoy = gender === "boy";
-  if (revealText) revealText.textContent = isBoy ? "是「男生」！💙" : "是「女生」！💗";
-}
-
-// 初始顯示 scratch
-showPhase("scratch");
-
-// 啟動 Firestore（若失敗會顯示在 voteNote）
-initFirestore().catch((err) => {
-  console.error(err);
-  if (voteNote) voteNote.textContent = "Firestore 初始化失敗：" + (err?.message ?? err);
-});
+})();
