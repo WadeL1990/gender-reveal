@@ -2,20 +2,17 @@
    Earth Tone Theme Variables
 ===================================================== */
 :root {
-  /* Background */
   --bg-main: #faf7f2;
   --bg-card: #ffffff;
 
-  /* Text (high contrast for earth tone) */
-  --text-main: #3f3428;     /* 深棕：主要文字 */
-  --text-muted: #7b6a55;    /* 中棕：次要文字 */
+  --text-main: #3f3428;
+  --text-muted: #7b6a55;
 
-  /* Earth colors */
-  --earth-1: #e6dccf;       /* 淺卡其 */
-  --earth-2: #c9b8a0;       /* 沙色 */
-  --earth-3: #9c7f5a;       /* 焦糖棕 */
-  --earth-4: #6f5a3e;       /* 深棕 */
-  --accent:  #7a8b5a;       /* 橄欖綠 */
+  --earth-1: #e6dccf;
+  --earth-2: #c9b8a0;
+  --earth-3: #9c7f5a;
+  --earth-4: #6f5a3e;
+  --accent:  #7a8b5a;
 }
 
 /* =====================================================
@@ -32,9 +29,12 @@ body {
   font-family: system-ui, -apple-system, "Noto Sans TC", sans-serif;
 }
 
-/* 強制修正所有舊白字 */
-body, section, header, main, p,
+/* 基本文字 */
 h1, h2, h3, h4, h5 {
+  color: var(--earth-4);
+}
+
+p {
   color: var(--text-main);
 }
 
@@ -43,7 +43,7 @@ b, strong {
 }
 
 /* =====================================================
-   Utility Text
+   Utility
 ===================================================== */
 .muted,
 .small,
@@ -68,16 +68,6 @@ b, strong {
   margin-bottom: 20px;
 }
 
-.topbar h1 {
-  margin: 0 0 6px;
-  color: var(--earth-4);
-}
-
-.topbar p {
-  margin: 0;
-  color: var(--text-muted);
-}
-
 .status .chip {
   background: var(--earth-1);
   color: var(--earth-4);
@@ -98,6 +88,25 @@ b, strong {
 }
 
 /* =====================================================
+   Phase visibility ✅ 關鍵
+===================================================== */
+.hidden {
+  display: none !important;
+}
+
+#phaseScratch,
+#phaseVote,
+#phaseReveal {
+  display: none;
+}
+
+#phaseScratch:not(.hidden),
+#phaseVote:not(.hidden),
+#phaseReveal:not(.hidden) {
+  display: block;
+}
+
+/* =====================================================
    Scratch Cards
 ===================================================== */
 .grid {
@@ -112,23 +121,15 @@ b, strong {
   border-radius: 18px;
   overflow: hidden;
   box-shadow: 0 10px 24px rgba(0,0,0,.12);
-  transition: transform .2s ease, box-shadow .2s ease;
-}
-
-.scratchCard:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 16px 34px rgba(0,0,0,.18);
 }
 
 .scratchBg {
   padding: 18px;
-  height: 100%;
 }
 
 .scratchBg .title {
   font-size: 18px;
   font-weight: 800;
-  margin-bottom: 6px;
   color: var(--earth-4);
 }
 
@@ -158,87 +159,46 @@ b, strong {
 /* =====================================================
    Buttons
 ===================================================== */
-.btn {
+.btn,
+.voteBtn {
   background: var(--earth-2);
   color: var(--earth-4);
   border: none;
   border-radius: 999px;
-  padding: 10px 16px;
   font-weight: 700;
   cursor: pointer;
-}
-
-.btn:disabled {
-  opacity: .5;
-  cursor: not-allowed;
 }
 
 .voteRow {
   display: flex;
   gap: 12px;
-  justify-content: center;
-}
-
-.voteBtn {
-  flex: 1;
-  border-radius: 999px;
-  padding: 14px 18px;
-  font-size: 16px;
-  font-weight: 700;
-  border: none;
-  cursor: pointer;
-  transition: transform .15s ease, box-shadow .15s ease;
-}
-
-.voteBtn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 18px rgba(0,0,0,.15);
-}
-
-.voteBtn.boy {
-  background: #dfeaf3;
-}
-
-.voteBtn.girl {
-  background: var(--earth-1);
 }
 
 /* =====================================================
-   Progress / Bars
+   Bars
 ===================================================== */
-.barWrap {
-  margin-top: 12px;
-}
-
 .bar {
   height: 10px;
   border-radius: 999px;
-  overflow: hidden;
   background: var(--earth-1);
+  overflow: hidden;
   display: flex;
-}
-
-.barFill {
-  height: 100%;
-}
-
-.barFill.boy {
-  background: #a8c8e6;
 }
 
 .barFill.girl {
   background: var(--earth-3);
 }
 
+.barFill.boy {
+  background: #a8c8e6;
+}
+
 .barLabels {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 6px;
   color: var(--text-main);
 }
 
 /* =====================================================
-   Reveal Transition Overlay
+   Reveal Transition
 ===================================================== */
 .revealTransition {
   position: fixed;
@@ -251,7 +211,6 @@ b, strong {
   font-size: 22px;
   font-weight: 800;
   color: var(--earth-4);
-  letter-spacing: .12em;
   opacity: 0;
   pointer-events: none;
 }
@@ -272,7 +231,6 @@ b, strong {
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ✅ 寶寶照片輕微放大 */
 .zoom-in {
   animation: zoomIn 1.2s ease forwards;
 }
@@ -300,72 +258,4 @@ b, strong {
   font-size: 28px;
   font-weight: 900;
   color: var(--earth-4);
-}
-
-/* =====================================================
-   FINAL TEXT CONTRAST OVERRIDE  ✅一定要放最底部
-===================================================== */
-
-/* 所有卡片、區塊內文字強制深色 */
-.card *,
-section *,
-header * {
-  color: var(--text-main) !important;
-}
-
-/* Header 狀態 chip */
-.status .chip {
-  color: var(--earth-4) !important;
-  background: var(--earth-1) !important;
-}
-
-/* 按鈕文字（避免白字） */
-.btn,
-.voteBtn {
-  color: var(--earth-4) !important;
-}
-
-/* 投票區數字 */
-.barLabels,
-.barLabels b {
-  color: var(--earth-4) !important;
-}
-
-/* 揭曉轉場文字 */
-.revealTransition {
-  color: var(--earth-4) !important;
-}
-
-/* 揭曉文字 */
-.revealText {
-  color: var(--earth-4) !important;
-}
-
-/* 防止任何地方殘留白字 */
-[style*="color: #fff"],
-[style*="color:#fff"] {
-  color: var(--earth-4) !important;
-}
-
-/* =====================================================
-   PHASE VISIBILITY FIX ✅ 一定要放在最後
-===================================================== */
-
-/* 強制隱藏被標記為 hidden 的區塊 */
-.hidden {
-  display: none !important;
-}
-
-/* 保證卡片區塊只在被顯示時才出現 */
-#phaseScratch,
-#phaseVote,
-#phaseReveal {
-  display: none;
-}
-
-/* JS 控制時，會移除 hidden，所以要能顯示 */
-#phaseScratch:not(.hidden),
-#phaseVote:not(.hidden),
-#phaseReveal:not(.hidden) {
-  display: block;
 }
