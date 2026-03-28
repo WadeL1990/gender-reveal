@@ -1,232 +1,94 @@
-:root{
-    --bg:#0b1220;
-    --card:#111a2e;
-    --text:#eaf0ff;
-    --muted:#9fb2d8;
-    --line:rgba(255,255,255,.10);
-    --shadow: 0 18px 40px rgba(0,0,0,.35);
-    --pink:#ff5aa5;
-    --blue:#4aa3ff;
-  }
-  
-  *{box-sizing:border-box}
-  body{
-    margin:0;
-    font-family: system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans TC",sans-serif;
-    background: radial-gradient(1200px 800px at 70% 20%, #1a2a52 0%, var(--bg) 55%);
-    color:var(--text);
-    min-height:100vh;
-    padding:18px;
-    display:flex;
-    justify-content:center;
-  }
-  
-  .wrap{width:min(980px,100%); display:grid; gap:16px}
-  
-  .topbar{
-    background: rgba(17,26,46,.78);
-    border:1px solid var(--line);
-    border-radius:22px;
-    padding:18px;
-    box-shadow: var(--shadow);
-    backdrop-filter: blur(8px);
-    display:flex;
-    gap:14px;
-    align-items:flex-start;
-    justify-content:space-between;
-    flex-wrap:wrap;
-  }
-  h1{margin:0; font-size:22px; letter-spacing:.5px}
-  p{margin:6px 0 0; color:var(--muted); line-height:1.5; font-size:14px}
-  
-  .status .chip{
-    background: rgba(255,255,255,.06);
-    border: 1px solid var(--line);
-    border-radius: 999px;
-    padding:10px 12px;
-    color:var(--muted);
-    user-select:none;
-  }
-  
-  .card{
-    background: rgba(17,26,46,.60);
-    border:1px solid var(--line);
-    border-radius:22px;
-    padding:16px;
-    box-shadow: 0 18px 40px rgba(0,0,0,.28);
-  }
-  .cardHead{display:flex; align-items:baseline; justify-content:space-between; gap:10px; flex-wrap:wrap}
-  h2{margin:0; font-size:18px}
-  .muted{color:var(--muted)}
-  .small{font-size:12px}
-  
-  .progressRow{
-    margin-top:10px;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:10px;
-    flex-wrap:wrap;
-  }
-  
-  .btn{
-    border:0;
-    background: linear-gradient(135deg, rgba(255,213,106,.95), rgba(255,90,165,.9));
-    color:#1a1330;
-    padding: 10px 14px;
-    border-radius: 14px;
-    font-weight: 800;
-    cursor:pointer;
-    box-shadow: 0 14px 30px rgba(255,90,165,.25);
-  }
-  .btn[disabled]{opacity:.45; cursor:not-allowed; box-shadow:none}
-  
-  .grid{
-    margin-top:12px;
-    display:grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap:12px;
-  }
-  @media (max-width: 760px){ .grid{grid-template-columns: repeat(2, 1fr);} }
-  
-  .scratchCard{
-    position:relative;
-    border-radius:18px;
-    overflow:hidden;
-    border:1px solid var(--line);
-    background: rgba(255,255,255,.05);
-    min-height: 150px;
-  }
-  
-  .scratchBg{
-    position:absolute; inset:0;
-    padding:14px;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    gap:8px;
-    text-align:left;
-  }
-  .scratchBg .title{font-weight:900; letter-spacing:.5px}
-  .scratchBg .desc{color:rgba(234,240,255,.88); line-height:1.35; font-size:14px}
-  .scratchBg .tag{
-    font-size:12px;
-    color:rgba(234,240,255,.70);
-    margin-top:4px;
-  }
-  
-  .scratchOverlay{
-    position:absolute; inset:0;
-  }
-  
-  .hint{
-    margin-top:12px;
-    padding:12px;
-    border:1px dashed rgba(255,255,255,.16);
-    border-radius:16px;
-    color:rgba(234,240,255,.75);
-    font-size:13px;
-    line-height:1.55;
-  }
-  
-  .hidden{display:none !important}
-  
-  .voteRow{
-    display:grid;
-    grid-template-columns: 1fr 1fr;
-    gap:12px;
-    margin-top:12px;
-  }
-  .voteBtn{
-    border:1px solid var(--line);
-    border-radius:18px;
-    padding:14px 12px;
-    font-size:16px;
-    font-weight:900;
-    cursor:pointer;
-    background: rgba(255,255,255,.06);
-    color:var(--text);
-    transition: transform .12s ease, filter .12s ease;
-  }
-  .voteBtn:hover{transform: translateY(-2px); filter:brightness(1.06)}
-  .voteBtn:active{transform: translateY(0px) scale(.99)}
-  .voteBtn.boy{outline: 1px solid rgba(74,163,255,.25)}
-  .voteBtn.girl{outline: 1px solid rgba(255,90,165,.25)}
-  .voteBtn[disabled]{opacity:.5; cursor:not-allowed; transform:none}
-  
-  .barWrap{margin-top:12px}
-  .bar{
-    height:16px;
-    border-radius:999px;
-    overflow:hidden;
-    border:1px solid var(--line);
-    background: rgba(255,255,255,.04);
-    display:flex;
-  }
-  .barFill{height:100%}
-  .barFill.boy{background: linear-gradient(90deg, rgba(74,163,255,.95), rgba(74,163,255,.55))}
-  .barFill.girl{background: linear-gradient(90deg, rgba(255,90,165,.55), rgba(255,90,165,.95))}
-  .barLabels{
-    display:flex; justify-content:space-between; gap:10px;
-    margin-top:8px; color:rgba(234,240,255,.88);
-  }
-  .divider{height:1px; background: var(--line); margin:14px 0}
-  
-  .center{text-align:center}
-  
-  .revealBox{
-    margin-top:14px;
-    display:grid;
-    place-items:center;
-    gap:12px;
-  }
-  .babyImg{
-    width:min(420px, 100%);
-    border-radius:22px;
-    border:1px solid var(--line);
-    box-shadow: 0 26px 70px rgba(0,0,0,.45);
-  }
-  .revealText{
-    font-size:34px;
-    font-weight:1000;
-    letter-spacing:1px;
-  }
-  /* =========================
-   Earth Tone Theme
-========================= */
+/* =====================================================
+   Earth Tone Theme Variables
+===================================================== */
 :root {
-  /*背景*/
-  --bg-main: #faf7f2; /*米白*/
+  /* Background */
+  --bg-main: #faf7f2;
   --bg-card: #ffffff;
 
-  /*點綴*/
-  --earth-1: #e6dccf;
-  --earth-2: #c9b8a0;
-  --earth-3: #9c7f5a;
-  --earth-4: #6f5a3e;
-  --accent:  #7a8b5a;
+  /* Text (high contrast for earth tone) */
+  --text-main: #3f3428;     /* 深棕：主要文字 */
+  --text-muted: #7b6a55;    /* 中棕：次要文字 */
 
-  /*文字*/
-  --text-main: #3f3428; /*深棕:主要文字*/
-  --text-muted: #7b6a55; /*中棕:說明文字*/
+  /* Earth colors */
+  --earth-1: #e6dccf;       /* 淺卡其 */
+  --earth-2: #c9b8a0;       /* 沙色 */
+  --earth-3: #9c7f5a;       /* 焦糖棕 */
+  --earth-4: #6f5a3e;       /* 深棕 */
+  --accent:  #7a8b5a;       /* 橄欖綠 */
 }
 
-/* =========================
-   Base
-========================= */
+/* =====================================================
+   Global Base
+===================================================== */
+* {
+  box-sizing: border-box;
+}
+
 body {
+  margin: 0;
   background: linear-gradient(180deg, #fff 0%, var(--bg-main) 100%);
   color: var(--text-main);
   font-family: system-ui, -apple-system, "Noto Sans TC", sans-serif;
 }
 
-.muted {
+/* 強制修正所有舊白字 */
+body, section, header, main, p,
+h1, h2, h3, h4, h5 {
+  color: var(--text-main);
+}
+
+b, strong {
+  color: var(--earth-4);
+}
+
+/* =====================================================
+   Utility Text
+===================================================== */
+.muted,
+.small,
+.hint {
   color: var(--text-muted);
 }
 
-/* =========================
+.center {
+  text-align: center;
+}
+
+/* =====================================================
+   Layout
+===================================================== */
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.topbar {
+  margin-bottom: 20px;
+}
+
+.topbar h1 {
+  margin: 0 0 6px;
+  color: var(--earth-4);
+}
+
+.topbar p {
+  margin: 0;
+  color: var(--text-muted);
+}
+
+.status .chip {
+  background: var(--earth-1);
+  color: var(--earth-4);
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 13px;
+}
+
+/* =====================================================
    Card
-========================= */
+===================================================== */
 .card {
   background: var(--bg-card);
   border-radius: 22px;
@@ -235,9 +97,15 @@ body {
   box-shadow: 0 14px 30px rgba(0,0,0,.08);
 }
 
-/* =========================
+/* =====================================================
    Scratch Cards
-========================= */
+===================================================== */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 14px;
+}
+
 .scratchCard {
   position: relative;
   background: linear-gradient(160deg, var(--earth-1), #fff);
@@ -261,11 +129,13 @@ body {
   font-size: 18px;
   font-weight: 800;
   margin-bottom: 6px;
+  color: var(--earth-4);
 }
 
 .scratchBg .desc {
   font-size: 14px;
   line-height: 1.6;
+  color: var(--text-main);
 }
 
 .scratchBg .tag {
@@ -285,10 +155,32 @@ body {
   cursor: pointer;
 }
 
-/* =========================
-   Vote Buttons
-========================= */
+/* =====================================================
+   Buttons
+===================================================== */
+.btn {
+  background: var(--earth-2);
+  color: var(--earth-4);
+  border: none;
+  border-radius: 999px;
+  padding: 10px 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn:disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+.voteRow {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
 .voteBtn {
+  flex: 1;
   border-radius: 999px;
   padding: 14px 18px;
   font-size: 16px;
@@ -311,9 +203,43 @@ body {
   background: var(--earth-1);
 }
 
-/* =========================
-   Reveal Transition
-========================= */
+/* =====================================================
+   Progress / Bars
+===================================================== */
+.barWrap {
+  margin-top: 12px;
+}
+
+.bar {
+  height: 10px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--earth-1);
+  display: flex;
+}
+
+.barFill {
+  height: 100%;
+}
+
+.barFill.boy {
+  background: #a8c8e6;
+}
+
+.barFill.girl {
+  background: var(--earth-3);
+}
+
+.barLabels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+  color: var(--text-main);
+}
+
+/* =====================================================
+   Reveal Transition Overlay
+===================================================== */
 .revealTransition {
   position: fixed;
   inset: 0;
@@ -334,9 +260,9 @@ body {
   animation: fadeIn .6s ease forwards;
 }
 
-/* =========================
-   Reveal Animations
-========================= */
+/* =====================================================
+   Animations
+===================================================== */
 .fade-in {
   animation: fadeIn .6s ease forwards;
 }
@@ -346,7 +272,7 @@ body {
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ✅ 寶寶照片「輕微放大」動畫 */
+/* ✅ 寶寶照片輕微放大 */
 .zoom-in {
   animation: zoomIn 1.2s ease forwards;
 }
@@ -356,9 +282,9 @@ body {
   to   { transform: scale(1); opacity: 1; }
 }
 
-/* =========================
+/* =====================================================
    Reveal Box
-========================= */
+===================================================== */
 .revealBox {
   text-align: center;
 }
@@ -373,32 +299,5 @@ body {
 .revealText {
   font-size: 28px;
   font-weight: 900;
-  color: var(--earth-3);
-}
-
-/* =========================
-   Text Contrast Fix
-========================= */
-
-/* 全站預設文字 */
-body, 
-.card, 
-section, 
-header, 
-p, 
-h1, h2, h3, h4, h5 {
-  color: var(--text-main);
-}
-
-/* 次要說明文字 */
-.muted,
-.small,
-.hint {
-  color: var(--text-muted);
-}
-
-/* 投票數字、強調文字 */
-b,
-strong {
   color: var(--earth-4);
 }
