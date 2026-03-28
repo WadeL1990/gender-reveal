@@ -229,3 +229,62 @@ p { color: var(--text-main); }
   from { transform: scale(.95); opacity: 0; }
   to   { transform: scale(1); opacity: 1; }
 }
+
+/* =====================================================
+   FINAL STRUCTURE FIX ✅ 解決比例 / 空白 / 手機按鈕
+===================================================== */
+
+/* ---------- Phase 至少撐滿一個畫面 ---------- */
+#phaseScratch,
+#phaseVote,
+#phaseReveal {
+  min-height: calc(100vh - 120px); /* 扣掉 header */
+}
+
+/* ---------- 刮刮樂卡片比例（避免扁卡） ---------- */
+.scratchCard {
+  aspect-ratio: 3 / 2;   /* ✅ 卡片視覺比例 */
+}
+
+/* 讓內容與刮層撐滿卡片 */
+.scratchBg,
+.scratchOverlay {
+  position: absolute;
+  inset: 0;
+}
+
+/* ---------- 桌機刮刮樂穩定欄數 ---------- */
+@media (min-width: 1024px) {
+  #phaseScratch .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ---------- 手機：刮刮樂一張一張 ---------- */
+@media (max-width: 768px) {
+  #phaseScratch .grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+}
+
+/* ---------- 手機：投票按鈕一定要看到 ---------- */
+@media (max-width: 768px) {
+  #phaseVote .voteRow {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  #phaseVote .voteBtn {
+    width: 100%;
+    min-height: 72px;
+    font-size: 20px;
+  }
+}
+
+/* ---------- 桌機：投票按鈕也要夠大 ---------- */
+#phaseVote .voteBtn {
+  min-height: 64px;
+  font-size: 20px;
+}
