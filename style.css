@@ -229,4 +229,3 @@ p { color: var(--text-main); }
   from { transform: scale(.95); opacity: 0; }
   to   { transform: scale(1); opacity: 1; }
 }
-``
