@@ -1,5 +1,5 @@
 /* =====================================================
-   Theme Variables (Earth Tone)
+   Theme (Earth Tone)
 ===================================================== */
 :root {
   --bg-main: #faf7f2;
@@ -18,7 +18,9 @@
 /* =====================================================
    Base
 ===================================================== */
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
 body {
   margin: 0;
@@ -37,14 +39,12 @@ p { color: var(--text-main); }
   color: var(--text-muted);
 }
 
-.center { text-align: center; }
-
 /* =====================================================
-   Layout ✅ 不再限制死寬度
+   Layout（回到穩定版本）
 ===================================================== */
 .wrap {
-  width: 100%;
-  margin: 0;
+  max-width: 720px;   /* ✅ 回到原本穩定值 */
+  margin: 0 auto;
   padding: 16px;
 }
 
@@ -60,13 +60,17 @@ p { color: var(--text-main); }
 }
 
 /* =====================================================
-   Phase Control（穩定）
+   Phase control（原始邏輯）
 ===================================================== */
-.hidden { display: none !important; }
+.hidden {
+  display: none !important;
+}
 
 #phaseScratch,
 #phaseVote,
-#phaseReveal { display: none; }
+#phaseReveal {
+  display: none;
+}
 
 #phaseScratch:not(.hidden),
 #phaseVote:not(.hidden),
@@ -75,23 +79,12 @@ p { color: var(--text-main); }
 }
 
 /* =====================================================
-   Stage 1：Scratch Cards
+   Scratch Cards（原始比例）
 ===================================================== */
-
-/* ✅ 桌機 / 平板：最多 3 欄 */
-#phaseScratch .grid {
+.grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-}
-
-/* ✅ 手機：一張一張 */
-@media (max-width: 768px) {
-  #phaseScratch .grid {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 14px;
 }
 
 .scratchCard {
@@ -102,25 +95,26 @@ p { color: var(--text-main); }
 }
 
 .scratchBg {
-  padding: 18px;
+  padding: 16px;
 }
 
 .scratchBg .title {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 800;
+  margin-bottom: 6px;
 }
 
 .scratchBg .desc {
-  font-size: 15px;
+  font-size: 14px;
   line-height: 1.6;
 }
 
 .scratchBg .tag {
   position: absolute;
-  right: 12px;
-  bottom: 12px;
+  right: 10px;
+  bottom: 10px;
   font-size: 12px;
-  padding: 4px 10px;
+  padding: 3px 10px;
   border-radius: 999px;
   background: rgba(122,139,90,.15);
   color: var(--accent);
@@ -132,41 +126,37 @@ p { color: var(--text-main); }
 }
 
 /* =====================================================
-   Stage 2：Vote ✅ 強制行動導向
+   Buttons（原始尺寸）
 ===================================================== */
-#phaseVote .card {
-  padding-top: 32px;
-  padding-bottom: 32px;
-}
-
-/* 投票按鈕區 */
-#phaseVote .voteRow {
-  display: flex;
-  gap: 20px;
-  margin-top: 24px;
-}
-
-/* ✅ 桌機：並排大按鈕 */
-#phaseVote .voteBtn {
-  flex: 1;
-  font-size: 20px;
-  font-weight: 800;
-  height: 64px;
+.btn {
+  padding: 10px 16px;
+  font-size: 14px;
   border-radius: 999px;
   border: none;
+  background: var(--earth-2);
+  color: var(--earth-4);
 }
 
-/* ✅ 手機：一顆一行、超好點 */
-@media (max-width: 768px) {
-  #phaseVote .voteRow {
-    flex-direction: column;
-  }
+.voteRow {
+  display: flex;
+  gap: 12px;
+}
 
-  #phaseVote .voteBtn {
-    width: 100%;
-    height: 72px;
-    font-size: 20px;
-  }
+.voteBtn {
+  flex: 1;
+  padding: 12px 16px;
+  font-size: 16px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+}
+
+.voteBtn.boy {
+  background: #dfeaf3;
+}
+
+.voteBtn.girl {
+  background: var(--earth-1);
 }
 
 /* =====================================================
@@ -186,31 +176,30 @@ p { color: var(--text-main); }
 .barLabels {
   display: flex;
   justify-content: space-between;
-  margin-top: 8px;
+  margin-top: 6px;
 }
 
 /* =====================================================
-   Stage 3：Reveal
+   Reveal
 ===================================================== */
 .revealBox {
   text-align: center;
 }
 
 .babyImg {
-  width: 90%;
-  max-width: 320px;
-  border-radius: 20px;
-  margin-bottom: 16px;
+  max-width: 220px;
+  border-radius: 18px;
+  margin-bottom: 14px;
 }
 
 .revealText {
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 900;
   color: var(--earth-4);
 }
 
 /* =====================================================
-   Animations
+   Animations（保留）
 ===================================================== */
 .fade-in {
   animation: fadeIn .6s ease forwards;
@@ -228,63 +217,4 @@ p { color: var(--text-main); }
 @keyframes zoomIn {
   from { transform: scale(.95); opacity: 0; }
   to   { transform: scale(1); opacity: 1; }
-}
-
-/* =====================================================
-   FINAL STRUCTURE FIX ✅ 解決比例 / 空白 / 手機按鈕
-===================================================== */
-
-/* ---------- Phase 至少撐滿一個畫面 ---------- */
-#phaseScratch,
-#phaseVote,
-#phaseReveal {
-  min-height: calc(100vh - 120px); /* 扣掉 header */
-}
-
-/* ---------- 刮刮樂卡片比例（避免扁卡） ---------- */
-.scratchCard {
-  aspect-ratio: 3 / 2;   /* ✅ 卡片視覺比例 */
-}
-
-/* 讓內容與刮層撐滿卡片 */
-.scratchBg,
-.scratchOverlay {
-  position: absolute;
-  inset: 0;
-}
-
-/* ---------- 桌機刮刮樂穩定欄數 ---------- */
-@media (min-width: 1024px) {
-  #phaseScratch .grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-/* ---------- 手機：刮刮樂一張一張 ---------- */
-@media (max-width: 768px) {
-  #phaseScratch .grid {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-}
-
-/* ---------- 手機：投票按鈕一定要看到 ---------- */
-@media (max-width: 768px) {
-  #phaseVote .voteRow {
-    flex-direction: column;
-    gap: 20px;
-  }
-
-  #phaseVote .voteBtn {
-    width: 100%;
-    min-height: 72px;
-    font-size: 20px;
-  }
-}
-
-/* ---------- 桌機：投票按鈕也要夠大 ---------- */
-#phaseVote .voteBtn {
-  min-height: 64px;
-  font-size: 20px;
 }
