@@ -62,10 +62,10 @@ showPhase("scratch");
 // 2) Scratch cards (Stage 1)
 // ------------------------------
 const SIGNS = [
-  { title: "肚子形狀", desc: "肚型較尖, 可能是「男寶」特徵", tag: "僅供娛樂" },
-  { title: "飲食口味", desc: "愛吃酸的, 不愛吃辣的, 可能是「男寶」特徵", tag: "僅供娛樂" },
-  { title: "皮膚狀況", desc: "沒長痘痘, 皮膚也沒變差, 可能是「女寶」特徵", tag: "僅供娛樂" },
-  { title: "寶寶心跳", desc: "寶寶心跳快,可能傳是「女寶」特徵", tag: "僅供娛樂" },
+  { title: "肚子形狀", desc: "肚型較尖, 可能是「男寶」特徵", tag: "" },
+  { title: "飲食口味", desc: "愛吃酸的, 不愛吃辣的, 可能是「男寶」特徵", tag: "" },
+  { title: "皮膚狀況", desc: "沒長痘痘, 皮膚也沒變差, 可能是「女寶」特徵", tag: "" },
+  { title: "寶寶心跳", desc: "寶寶心跳快,可能傳是「女寶」特徵", tag: "" },
   ];
 
 let scratchDoneCount = 0;
@@ -288,7 +288,7 @@ function renderRevealUI(gender) {
   cachedRevealGender = g;
 
   if (revealText) {
-    revealText.textContent = g === "girl" ? "是「女生」！💗" : "是「男生」！💙";
+    revealText.textContent = g === "girl" ? "是「女寶」！💗" : "是「男生」！💙";
   }
 
   // Optional: swap image if you later prepare two assets
