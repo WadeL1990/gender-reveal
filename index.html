@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>寶寶性別揭曉｜刮刮樂</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <main class="wrap">
+    <header class="topbar">
+      <div>
+        <h1>👶 寶寶性別揭曉小遊戲</h1>
+        <p>第一關刮出「民間徵兆」（僅供娛樂），第二關投票猜測，最後揭曉！</p>
+      </div>
+      <div class="status">
+        <div class="chip">進度：<b id="phaseLabel">徵兆刮刮樂</b></div>
+      </div>
+    </header>
+
+    <!-- PHASE 1: SCRATCH -->
+    <section class="card" id="phaseScratch">
+      <div class="cardHead">
+        <h2>第一關：刮出懷孕徵兆</h2>
+        <div class="muted">刮開每張卡，看看大家聽過哪些說法 ✨</div>
+      </div>
+
+      <div class="progressRow">
+        <div class="muted">已完成 <b id="scratchDone">0</b> / <b id="scratchTotal">8</b></div>
+        <button class="btn" id="toVoteBtn" disabled>進入投票猜測 ➜</button>
+      </div>
+
+      <div class="grid" id="scratchGrid"></div>
+
+      <div class="hint">
+        提醒：這些都是台灣常見民俗說法整理，沒有科學根據，純粹好玩 😊
+      </div>
+    </section>
+
+    <!-- PHASE 2: VOTE -->
+    <section class="card hidden" id="phaseVote">
+      <div class="cardHead">
+        <h2>第二關：投票猜猜看</h2>
+        <div class="muted">投票後會顯示目前總票數（所有親友累積）</div>
+      </div>
+
+      <div class="voteRow">
+        <button class="voteBtn boy" id="voteBoy">👦 我猜男生</button>
+        <button class="voteBtn girl" id="voteGirl">👧 我猜女生</button>
+      </div>
+
+      <div class="barWrap">
+        <div class="bar">
+          <div class="barFill boy" id="boyBar" style="width:50%"></div>
+          <div class="barFill girl" id="girlBar" style="width:50%"></div>
+        </div>
+        <div class="barLabels">
+          <div>男生票：<b id="boyVotes">0</b></div>
+          <div>女生票：<b id="girlVotes">0</b></div>
+        </div>
+        <div class="muted small" id="voteNote">你尚未投票</div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="muted">
+        最後揭曉會在主辦人切換後自動出現（不用重新整理）。
+      </div>
+    </section>
+
+    <!-- PHASE 3: REVEAL -->
+    <section class="card hidden" id="phaseReveal">
+      <div class="cardHead center">
+        <h2>🎉 揭曉時刻</h2>
+        <div class="muted">謝謝你參與這個小遊戲 ❤️</div>
+      </div>
+
+      <div class="revealBox">
+        <img id="babyImg" class="babyImg" src="./assets/baby.png" alt="baby" />
+        <div class="revealText" id="revealText">是……</div>
+      </div>
+
+      <div class="shareHint muted small">
+        你可以截圖分享給親友～✨
+      </div>
+    </section>
+  </main>
+
+  <!-- ScratchCard library -->
+  <script src="./vendor/scratchcard.min.js"></script>
+  <!-- App -->
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
