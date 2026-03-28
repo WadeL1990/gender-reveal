@@ -332,19 +332,40 @@ async function castVote(choice) {
     if (voteBoyBtn) voteBoyBtn.disabled = true;
     if (voteGirlBtn) voteGirlBtn.disabled = true;
 
+    // 更新票數
     if (choice === "boy") {
       await updateDoc(revealRef, { boyVotes: increment(1), updatedAt: serverTimestamp() });
     } else {
       await updateDoc(revealRef, { girlVotes: increment(1), updatedAt: serverTimestamp() });
     }
 
-    // Local navigation to reveal
-    showPhase("reveal");
+    // ✅ 轉場遮罩
+    const overlay = document.getElementById("revealTransition");
+    if (overlay) overlay.classList.add("show");
 
-    // Use cachedRevealGender (controlled by you in Firebase)
-    renderRevealUI(cachedRevealGender);
+    // ✅ 等一下再進入揭曉（儀式感）
+    setTimeout(() => {
+      if (overlay) overlay.classList.remove("show");
 
-    if (voteNote) voteNote.textContent = "已投票，揭曉中…";
+      // 進入揭曉畫面（本機）
+      showPhase("reveal");
+
+      // 淡入揭曉區
+      if (phaseReveal) phaseReveal.classList.add("fade-in");
+
+      // 更新文字與圖片
+      renderRevealUI(cachedRevealGender);
+
+      // ✅ 寶寶照片輕微放大（可重播）
+      if (babyImg) {
+        babyImg.classList.remove("zoom-in");
+        void babyImg.offsetWidth; // 強制 reflow，確保動畫可重播 [1](https://blog.csdn.net/gusushantang/article/details/150603953)[2](https://geek-docs.com/css/css-ask-answer/323_css_restart_animation_in_css3_any_better_way_than_removing_the_element.html)
+        babyImg.classList.add("zoom-in");
+      }
+
+      if (voteNote) voteNote.textContent = "已投票，揭曉中…";
+    }, 900);
+
   } catch (err) {
     console.error(err);
     votedThisRun = false;

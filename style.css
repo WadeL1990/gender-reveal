@@ -191,4 +191,182 @@
     font-weight:1000;
     letter-spacing:1px;
   }
-  
+  /* =========================
+   Earth Tone Theme
+========================= */
+:root {
+  --bg-main: #faf7f2;
+  --bg-card: #ffffff;
+  --earth-1: #e6dccf;
+  --earth-2: #c9b8a0;
+  --earth-3: #9c7f5a;
+  --earth-4: #6f5a3e;
+  --accent:  #7a8b5a;
+  --text-main: #3f3428;
+  --text-muted: #7b6a55;
+}
+
+/* =========================
+   Base
+========================= */
+body {
+  background: linear-gradient(180deg, #fff 0%, var(--bg-main) 100%);
+  color: var(--text-main);
+  font-family: system-ui, -apple-system, "Noto Sans TC", sans-serif;
+}
+
+.muted {
+  color: var(--text-muted);
+}
+
+/* =========================
+   Card
+========================= */
+.card {
+  background: var(--bg-card);
+  border-radius: 22px;
+  padding: 22px;
+  margin-bottom: 22px;
+  box-shadow: 0 14px 30px rgba(0,0,0,.08);
+}
+
+/* =========================
+   Scratch Cards
+========================= */
+.scratchCard {
+  position: relative;
+  background: linear-gradient(160deg, var(--earth-1), #fff);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 10px 24px rgba(0,0,0,.12);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.scratchCard:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 34px rgba(0,0,0,.18);
+}
+
+.scratchBg {
+  padding: 18px;
+  height: 100%;
+}
+
+.scratchBg .title {
+  font-size: 18px;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.scratchBg .desc {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.scratchBg .tag {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  font-size: 12px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgba(122,139,90,.15);
+  color: var(--accent);
+}
+
+.scratchOverlay {
+  position: absolute;
+  inset: 0;
+  cursor: pointer;
+}
+
+/* =========================
+   Vote Buttons
+========================= */
+.voteBtn {
+  border-radius: 999px;
+  padding: 14px 18px;
+  font-size: 16px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+
+.voteBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(0,0,0,.15);
+}
+
+.voteBtn.boy {
+  background: #dfeaf3;
+}
+
+.voteBtn.girl {
+  background: var(--earth-1);
+}
+
+/* =========================
+   Reveal Transition
+========================= */
+.revealTransition {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(180deg, var(--earth-1), var(--bg-main));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--earth-4);
+  letter-spacing: .12em;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.revealTransition.show {
+  animation: fadeIn .6s ease forwards;
+}
+
+/* =========================
+   Reveal Animations
+========================= */
+.fade-in {
+  animation: fadeIn .6s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ✅ 寶寶照片「輕微放大」動畫 */
+.zoom-in {
+  animation: zoomIn 1.2s ease forwards;
+}
+
+@keyframes zoomIn {
+  from { transform: scale(0.92); opacity: 0; }
+  to   { transform: scale(1); opacity: 1; }
+}
+
+/* =========================
+   Reveal Box
+========================= */
+.revealBox {
+  text-align: center;
+}
+
+.babyImg {
+  max-width: 240px;
+  border-radius: 20px;
+  box-shadow: 0 18px 40px rgba(0,0,0,.25);
+  margin-bottom: 16px;
+}
+
+.revealText {
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--earth-3);
+}
